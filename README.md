@@ -4,7 +4,7 @@ An elegant web-based implementation of the classic **Rock-Paper-Scissors** game 
 
 ---
 
-## ✨ Features
+##  Features
 
 * **Modern UI Design** – Clean minimalist layout with a stylish sidebar and soft lavender-themed aesthetics.
 * **Asynchronous Gameplay** – Uses JavaScript Fetch API to communicate with the Flask backend without page reloads.
@@ -15,7 +15,7 @@ An elegant web-based implementation of the classic **Rock-Paper-Scissors** game 
 
 ---
 
-## 🛠️ Project Structure
+##  Project Structure
 
 ```text
 RPS-GAME/
@@ -33,7 +33,7 @@ RPS-GAME/
 
 ---
 
-## 📋 Prerequisites
+##  Prerequisites
 
 ### Software Requirements
 
@@ -53,7 +53,7 @@ RPS-GAME/
 
 ---
 
-## 🚀 Local Setup
+##  Local Setup
 
 ### 1. Clone the Repository
 
@@ -100,7 +100,7 @@ http://127.0.0.1:5000/
 
 ---
 
-## ⚙️ How It Works
+##  How It Works
 
 1. The player selects **Rock**, **Paper**, or **Scissors**.
 2. JavaScript sends the selected choice to the Flask backend using a POST request.
@@ -111,7 +111,7 @@ http://127.0.0.1:5000/
 
 ---
 
-## 🧰 Technologies Used
+##  Technologies Used
 
 * Python
 * Flask
