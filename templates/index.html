@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="title-box">
+        <h1>
+            <p>ROCK</p> 
+            <p>PAPER</p>
+            <p>SCISSORS</p> 
+             <p>(BEST OF 5)</p>
+        </h1>
+        <p class="subtitle">First to 3 points wins!</p>
+    </div>
+
+    <div class="card">
+        <div class="score-area">
+            <div class="score-box">
+                <p class="score-label">You:</p>
+                <p id="user_score" class="score-num">0</p>
+            </div>
+            <div class="score-box">
+                <p class="score-label">Computer:</p>
+                <p id="computer_score" class="score-num">0</p>
+            </div>
+        </div>
+
+        <div class="battle-arena">
+            <div class="choice-circle" id="player-choice"><span>?</span></div>
+            <div class="vs-text">Vs</div>
+            <div class="choice-circle" id="computer-choice"><span>?</span></div>
+        </div>
+
+        <div class="result-area">
+            <p id="round" class="status-text">Make your move to start!</p>
+            <h2 id="match"></h2>
+        </div>
+
+        <div class="buttons-area">
+            <button onclick="play('rock')" class="rock">
+                <img src="{{ url_for('static', filename='rock.png') }}" alt="Rock">
+            </button>
+            <button onclick="play('paper')" class="paper">
+                <img src="{{ url_for('static', filename='paper.png') }}" alt="Paper">
+            </button>
+            <button onclick="play('scissors')" class="scissors">
+                <img src="{{ url_for('static', filename='scissors.png') }}" alt="Scissors">
+            </button>
+        </div>
+
+        <hr>
+
+        <button onclick="resetGame()" class="reset">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+PHBhdGggZD0iTTE3LjY1IDYuMzVDMTYuMiA0LjkgMTQuMjEgNCAxMiA0QzcuNSA0IDMuNjIgNy4yOCAzLjE0IDExLjIzQzMuMTQgMTEuMzIgMy4wOCAxMS40MiAzLjAxIDExLjQySDUuMDFDMi45NiAxMi40MyAzLjYgMTEuOTcgMy44NyAxMS44MkM0LjMzIDguOTcgNy45MSA3IDExLjk4IDdDMTQuOTcgNyAxNi40OCA5IDE3Ljg4IDEwLjA5TDE1IDEzSDIyVjZMMTcuNjUgNi4zNVoiLz48L3N2Zz4=" width="16" alt="Reset">
+            Reset
+        </button>
+    </div>
+
+</div>
+
+<script>
+let gameOver = false;
+
+function play(choice) {
+    if (gameOver) return;
+
+    fetch('/play', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ choice: choice })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Update images in circles
+        document.getElementById('player-choice').innerHTML = `<img src="/static/${data.user}.png" alt="${data.user}">`;
+        document.getElementById('player-choice').classList.add('filled');
+        
+        document.getElementById('computer-choice').innerHTML = `<img src="/static/${data.computer}.png" alt="${data.computer}">`;
+        document.getElementById('computer-choice').classList.add('filled');
+
+        // Determine round text based on the result
+        let roundText = "It's a tie!";
+        if (data.round_result === "user") roundText = "You win this round!";
+        else if (data.round_result === "computer") roundText = "Computer wins this round!";
+
+        document.getElementById('round').innerText = roundText;
+        document.getElementById('user_score').innerText = data.user_score;
+        document.getElementById('computer_score').innerText = data.computer_score;
+
+        if (data.game_over) {
+            document.getElementById('match').innerText = data.match_result;
+            gameOver = true;
+        }
+    });
+}
+
+function resetGame() {
+    fetch('/reset', { method: 'POST' })
+    .then(() => {
+        document.getElementById('user_score').innerText = 0;
+        document.getElementById('computer_score').innerText = 0;
+        document.getElementById('match').innerText = "";
+        document.getElementById('round').innerText = "Make your move to start!";
+        
+        document.getElementById('player-choice').innerHTML = '<span>?</span>';
+        document.getElementById('player-choice').classList.remove('filled');
+        
+        document.getElementById('computer-choice').innerHTML = '<span>?</span>';
+        document.getElementById('computer-choice').classList.remove('filled');
+        
+        gameOver = false;
+    });
+}
+</script>
+
+</body>
+</html>
